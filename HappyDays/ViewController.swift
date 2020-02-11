@@ -14,7 +14,10 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
-
-
+    @IBOutlet weak var textLabel: UILabel!
+    
+    @IBAction func continueButtton(_ sender: Any) {
+    }
+    
 }
 

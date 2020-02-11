@@ -13,6 +13,8 @@
 		EB67351F23F24E6D002E37DC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EB67351D23F24E6D002E37DC /* Main.storyboard */; };
 		EB67352123F24E79002E37DC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EB67352023F24E79002E37DC /* Assets.xcassets */; };
 		EB67352423F24E79002E37DC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EB67352223F24E79002E37DC /* LaunchScreen.storyboard */; };
+		EB67352C23F25B73002E37DC /* HappyDaysCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB67352B23F25B73002E37DC /* HappyDaysCollectionViewController.swift */; };
+		EB67352E23F25B9B002E37DC /* HappyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB67352D23F25B9B002E37DC /* HappyCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,8 @@
 		EB67352023F24E79002E37DC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EB67352323F24E79002E37DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EB67352523F24E79002E37DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EB67352B23F25B73002E37DC /* HappyDaysCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HappyDaysCollectionViewController.swift; sourceTree = "<group>"; };
+		EB67352D23F25B9B002E37DC /* HappyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HappyCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +64,8 @@
 				EB67351923F24E6D002E37DC /* SceneDelegate.swift */,
 				EB67351B23F24E6D002E37DC /* ViewController.swift */,
 				EB67351D23F24E6D002E37DC /* Main.storyboard */,
+				EB67352B23F25B73002E37DC /* HappyDaysCollectionViewController.swift */,
+				EB67352D23F25B9B002E37DC /* HappyCollectionViewCell.swift */,
 				EB67352023F24E79002E37DC /* Assets.xcassets */,
 				EB67352223F24E79002E37DC /* LaunchScreen.storyboard */,
 				EB67352523F24E79002E37DC /* Info.plist */,
@@ -138,7 +144,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EB67352C23F25B73002E37DC /* HappyDaysCollectionViewController.swift in Sources */,
 				EB67351C23F24E6D002E37DC /* ViewController.swift in Sources */,
+				EB67352E23F25B9B002E37DC /* HappyCollectionViewCell.swift in Sources */,
 				EB67351823F24E6D002E37DC /* AppDelegate.swift in Sources */,
 				EB67351A23F24E6D002E37DC /* SceneDelegate.swift in Sources */,
 			);
