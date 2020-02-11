@@ -60,17 +60,49 @@
 		EB67351623F24E6D002E37DC /* HappyDays */ = {
 			isa = PBXGroup;
 			children = (
-				EB67351723F24E6D002E37DC /* AppDelegate.swift */,
-				EB67351923F24E6D002E37DC /* SceneDelegate.swift */,
-				EB67351B23F24E6D002E37DC /* ViewController.swift */,
-				EB67351D23F24E6D002E37DC /* Main.storyboard */,
-				EB67352B23F25B73002E37DC /* HappyDaysCollectionViewController.swift */,
-				EB67352D23F25B9B002E37DC /* HappyCollectionViewCell.swift */,
-				EB67352023F24E79002E37DC /* Assets.xcassets */,
-				EB67352223F24E79002E37DC /* LaunchScreen.storyboard */,
+				EB67353223F26049002E37DC /* Model */,
+				EB67353123F26021002E37DC /* View */,
+				EB67353023F26007002E37DC /* Resource */,
+				EB67352F23F25FC9002E37DC /* View Controllers */,
 				EB67352523F24E79002E37DC /* Info.plist */,
 			);
 			path = HappyDays;
+			sourceTree = "<group>";
+		};
+		EB67352F23F25FC9002E37DC /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				EB67352B23F25B73002E37DC /* HappyDaysCollectionViewController.swift */,
+				EB67351B23F24E6D002E37DC /* ViewController.swift */,
+				EB67352D23F25B9B002E37DC /* HappyCollectionViewCell.swift */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		EB67353023F26007002E37DC /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				EB67352023F24E79002E37DC /* Assets.xcassets */,
+				EB67351923F24E6D002E37DC /* SceneDelegate.swift */,
+				EB67351723F24E6D002E37DC /* AppDelegate.swift */,
+			);
+			path = Resource;
+			sourceTree = "<group>";
+		};
+		EB67353123F26021002E37DC /* View */ = {
+			isa = PBXGroup;
+			children = (
+				EB67351D23F24E6D002E37DC /* Main.storyboard */,
+				EB67352223F24E79002E37DC /* LaunchScreen.storyboard */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		EB67353223F26049002E37DC /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
