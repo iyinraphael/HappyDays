@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="RuB-7L-dFQ">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="RuB-7L-dFQ">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -54,7 +54,7 @@
             </objects>
             <point key="canvasLocation" x="987" y="131"/>
         </scene>
-        <!--Memories View Controller-->
+        <!--Happy Days-->
         <scene sceneID="rgt-X2-u7G">
             <objects>
                 <collectionViewController id="Bg0-iz-2Tt" customClass="MemoriesViewController" customModule="HappyDays" customModuleProvider="target" sceneMemberID="viewController">
@@ -112,7 +112,7 @@
                             <outlet property="delegate" destination="Bg0-iz-2Tt" id="B7V-SY-oVA"/>
                         </connections>
                     </collectionView>
-                    <navigationItem key="navigationItem" id="paa-n0-JAu"/>
+                    <navigationItem key="navigationItem" title="Happy Days" id="paa-n0-JAu"/>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jes-S6-70T" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
