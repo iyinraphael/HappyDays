@@ -13,8 +13,8 @@
 		EB67351F23F24E6D002E37DC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EB67351D23F24E6D002E37DC /* Main.storyboard */; };
 		EB67352123F24E79002E37DC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EB67352023F24E79002E37DC /* Assets.xcassets */; };
 		EB67352423F24E79002E37DC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EB67352223F24E79002E37DC /* LaunchScreen.storyboard */; };
-		EB67352C23F25B73002E37DC /* HappyDaysCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB67352B23F25B73002E37DC /* HappyDaysCollectionViewController.swift */; };
-		EB67352E23F25B9B002E37DC /* HappyCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB67352D23F25B9B002E37DC /* HappyCollectionViewCell.swift */; };
+		EBFB46A9241DE04B00778999 /* MemoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBFB46A8241DE04B00778999 /* MemoriesViewController.swift */; };
+		EBFB46AB241DE19B00778999 /* MemoryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EBFB46AA241DE19A00778999 /* MemoryCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,8 +26,8 @@
 		EB67352023F24E79002E37DC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EB67352323F24E79002E37DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EB67352523F24E79002E37DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EB67352B23F25B73002E37DC /* HappyDaysCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HappyDaysCollectionViewController.swift; sourceTree = "<group>"; };
-		EB67352D23F25B9B002E37DC /* HappyCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HappyCollectionViewCell.swift; sourceTree = "<group>"; };
+		EBFB46A8241DE04B00778999 /* MemoriesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoriesViewController.swift; sourceTree = "<group>"; };
+		EBFB46AA241DE19A00778999 /* MemoryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MemoryCell.swift; path = HappyDays/View/MemoryCell.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,9 +72,9 @@
 		EB67352F23F25FC9002E37DC /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				EB67352B23F25B73002E37DC /* HappyDaysCollectionViewController.swift */,
+				EBFB46AA241DE19A00778999 /* MemoryCell.swift */,
 				EB67351B23F24E6D002E37DC /* ViewController.swift */,
-				EB67352D23F25B9B002E37DC /* HappyCollectionViewCell.swift */,
+				EBFB46A8241DE04B00778999 /* MemoriesViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -176,11 +176,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EB67352C23F25B73002E37DC /* HappyDaysCollectionViewController.swift in Sources */,
 				EB67351C23F24E6D002E37DC /* ViewController.swift in Sources */,
-				EB67352E23F25B9B002E37DC /* HappyCollectionViewCell.swift in Sources */,
 				EB67351823F24E6D002E37DC /* AppDelegate.swift in Sources */,
 				EB67351A23F24E6D002E37DC /* SceneDelegate.swift in Sources */,
+				EBFB46A9241DE04B00778999 /* MemoriesViewController.swift in Sources */,
+				EBFB46AB241DE19B00778999 /* MemoryCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

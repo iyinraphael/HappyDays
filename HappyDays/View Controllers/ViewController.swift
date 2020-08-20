@@ -7,6 +7,9 @@
 //
 
 import UIKit
+import AVFoundation
+import Photos
+import Speech
 
 class ViewController: UIViewController {
 
@@ -14,10 +17,53 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
-    @IBOutlet weak var textLabel: UILabel!
+    @IBOutlet weak var helpLabel: UILabel!
     
-    @IBAction func continueButtton(_ sender: Any) {
+    @IBAction func requestPermission(_ sender: Any) {
+        
+        requestPhotosPermissions()
     }
     
+// Mark: - Permission for Photo library, Audio record permission and for Speech
+    func requestPhotosPermissions() {
+        PHPhotoLibrary.requestAuthorization { [unowned self] authStatus in
+            DispatchQueue.main.async {
+                if authStatus == .authorized {
+                    self.requestRecordPersmissions()
+                } else {
+                    self.helpLabel.text = "Photos permission was declined; please enable it in settings the tap again."
+                }
+            }
+        }
+    }
+    
+    func requestRecordPersmissions() {
+        AVAudioSession.sharedInstance().requestRecordPermission {  [unowned self] allowed in
+            DispatchQueue.main.async {
+                if allowed {
+                    self.requestTranscibedPermission()
+                } else {
+                    self.helpLabel.text = "Recording permission was declined; please enable it in settings then tap continue again."
+                }
+            }
+        }
+    }
+    
+    func requestTranscibedPermission() {
+        SFSpeechRecognizer.requestAuthorization { [unowned self] authStatus in
+            DispatchQueue.main.async {
+                if authStatus == .authorized {
+                    self.authorizationComplete()
+                } else {
+                    self.helpLabel.text = "Transcription permission was declinedd; please enable it in settings then tap Continue again."
+                }
+            }
+        }
+    }
+    
+    func authorizationComplete() {
+        dismiss(animated: true, completion: nil)
+    }
+
 }
 
