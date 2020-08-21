@@ -14,12 +14,18 @@ class MemoriesViewController: UICollectionViewController, UINavigationController
     
     // MARK: - Properties
     var memories = [URL]()
-
+    var activeMemory: URL!
+    
+    var audioRecorder: AVAudioRecorder?
+    var recordingURL: URL!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         loadMemories()
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTapped))
+        
+        recordingURL = getDocumentsDirectory().appendingPathComponent("recording.m4a")
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -78,6 +84,16 @@ class MemoriesViewController: UICollectionViewController, UINavigationController
         let imageName = thumbnailURL(for: memory).path
         let image = UIImage(contentsOfFile: imageName)
         cell.imageView.image = image
+        // place gestureRecognize over cell
+        if cell.gestureRecognizers == nil {
+            let recognizer = UILongPressGestureRecognizer(target: self, action: #selector(memoryLongPress))
+            recognizer.minimumPressDuration = 0.25
+            cell.addGestureRecognizer(recognizer)
+            
+            cell.layer.borderColor = UIColor.white.cgColor
+            cell.layer.borderWidth = 3
+            cell.layer.cornerRadius = 10
+        }
         
         return cell
     }
@@ -124,13 +140,6 @@ class MemoriesViewController: UICollectionViewController, UINavigationController
             collectionView.reloadSections(IndexSet(integer: 1))
         }
         
-    }
-    
-    @objc func addTapped() {
-        let vc = UIImagePickerController()
-        vc.modalPresentationStyle = .formSheet
-        vc.delegate = self
-        navigationController?.present(vc, animated: true)
     }
     
     func saveNewMemory(image: UIImage) {
@@ -205,6 +214,62 @@ class MemoriesViewController: UICollectionViewController, UINavigationController
     func transcriptionURL(for memory: URL) -> URL {
         return memory.appendingPathExtension("txt")
     }
+    
+    @objc func addTapped() {
+           let vc = UIImagePickerController()
+           vc.modalPresentationStyle = .formSheet
+           vc.delegate = self
+           navigationController?.present(vc, animated: true)
+       }
+       
+    @objc func memoryLongPress(sender: UILongPressGestureRecognizer) {
+        if sender.state == .began {
+            let cell = sender.view as! MemoryCell
+            
+            if let index = collectionView.indexPath(for: cell){
+                activeMemory = memories[index.row]
+                recordMemory()
+            }
+        } else if sender.state == .ended {
+            finishRecording(success: true)
+        }
+    }
+    
+    func recordMemory() {
+        collectionView?.backgroundColor = UIColor(red: 0.5, green: 0, blue: 0, alpha: 1)
+        
+        // this just save me writing AVAudioSession.sharedIntance() everywhere
+        let recordingSession = AVAudioSession.sharedInstance()
+        
+        do {
+            // configure the session for recording and playback through the speaker
+            try recordingSession.setCategory(.playback, mode: .default, options: .defaultToSpeaker)
+            try recordingSession.setActive(true)
+            
+            // set up a high-quality recording session
+            let settings = [ AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
+                             AVSampleRateKey: 44100,
+                             AVNumberOfChannelsKey: 2,
+                             AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue]
+            
+            // create the audio recording, and assign ourselves as the delgate
+            audioRecorder = try AVAudioRecorder(url: recordingURL, settings: settings)
+            audioRecorder?.delegate = self
+            audioRecorder?.record()
+        
+        } catch let error {
+            print("failed to record: \(error)")
+            finishRecording(success: false)
+        }
+    }
+    
+    func finishRecording(success: Bool) {
+        
+    }
+    
+    func transcribeAudo(memory: URL) {
+        
+    }
 }
 
     // MARK: - Delagates method
@@ -230,4 +295,14 @@ extension MemoriesViewController: UICollectionViewDelegateFlowLayout {
             return CGSize(width: 0, height: 50)
         }
     }
+}
+
+extension MemoriesViewController: AVAudioRecorderDelegate {
+    
+    func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
+        if !flag {
+            finishRecording(success: false)
+        }
+    }
+    
 }
