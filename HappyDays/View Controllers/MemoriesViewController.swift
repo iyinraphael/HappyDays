@@ -264,11 +264,64 @@ class MemoriesViewController: UICollectionViewController, UINavigationController
     }
     
     func finishRecording(success: Bool) {
+        collectionView?.backgroundColor = UIColor.darkGray
+        
+        // Stop the recording if it isn’t already stopped.
+        audioRecorder?.stop()
+        
+        if success {
+            do {
+                // If the recording was successful, we need to create a file URL out of the active memory URL plus “m4a”
+                let memoryAudioURL = activeMemory.appendingPathExtension("m4a")
+                let fm  = FileManager.default
+                
+                // If a recording already exists there, we need to delete it because you can’t move a file over one that already exists.
+                if fm.fileExists(atPath: memoryAudioURL.path) {
+                    try fm.removeItem(at: memoryAudioURL)
+                }
+                // Move our recorded file (stored at the URL we put in recordingURL) into the memory’s audio URL.
+                try fm.moveItem(at: recordingURL, to: memoryAudioURL)
+                
+                // Start the transcription process.
+                transcribeAudo(memory: activeMemory)
+           
+            } catch let error {
+               
+                print("Failure finsihing recording: \(error)")
+            }
+        }
         
     }
     
     func transcribeAudo(memory: URL) {
+        // get paths to where the audio is, and where the transcription should be
+        let audio = audioURL(for: memory)
+        let transcription = transcriptionURL(for: memory)
         
+        // create a new recognizer and point it at our audio
+        let recognizer = SFSpeechRecognizer()
+        let request = SFSpeechURLRecognitionRequest(url: audio)
+        
+        // start recognition!
+        recognizer?.recognitionTask(with: request) { [unowned self ] (result, error) in
+            // abort if we didn't get any transcription back
+            guard let result = result else {
+                print("There was an error: \(error!)")
+                return
+            }
+            // if we go the final transcription back, we need to write to disk
+            if result.isFinal {
+                // pull out the best transcription...
+                let text = result.bestTranscription.formattedString
+                
+                // ...and write it to disk at the correct filename for this memory.
+                do {
+                    try text.write(to: transcription, atomically: true, encoding: String.Encoding.utf8)
+                } catch {
+                    print("Failed to save transcription")
+                }
+            }
+        }
     }
 }
 
