@@ -18,6 +18,7 @@ class MemoriesViewController: UICollectionViewController, UINavigationController
     
     var audioRecorder: AVAudioRecorder?
     var recordingURL: URL!
+    var audioPlayer: AVAudioPlayer?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -102,6 +103,28 @@ class MemoriesViewController: UICollectionViewController, UINavigationController
         return collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Header", for: indexPath)
     }
 
+    
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let memory = memories[indexPath.row]
+        let fm = FileManager.default
+        
+        do {
+            let audioName = audioURL(for: memory)
+            let transriptionName = transcriptionURL(for: memory)
+            
+            if fm.fileExists(atPath: audioName.path) {
+                audioPlayer = try AVAudioPlayer(contentsOf: audioName)
+                audioPlayer?.play()
+            }
+            
+            if fm.fileExists(atPath: transriptionName.path) {
+                let contents = try String(contentsOf: transriptionName)
+                print(contents)
+            }
+        } catch {
+            print("Error loading audio")
+        }
+    }
     
     // MARK: - Methods
     
@@ -236,6 +259,8 @@ class MemoriesViewController: UICollectionViewController, UINavigationController
     }
     
     func recordMemory() {
+        audioPlayer?.stop()
+        
         collectionView?.backgroundColor = UIColor(red: 0.5, green: 0, blue: 0, alpha: 1)
         
         // this just save me writing AVAudioSession.sharedIntance() everywhere
