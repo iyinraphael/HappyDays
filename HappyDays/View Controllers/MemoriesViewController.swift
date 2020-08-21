@@ -9,16 +9,20 @@
 import UIKit
 import Photos
 import Speech
+import CoreSpotlight
+import MobileCoreServices
 
 class MemoriesViewController: UICollectionViewController, UINavigationControllerDelegate {
     
     // MARK: - Properties
     var memories = [URL]()
     var activeMemory: URL!
+    var filteredMemories = [URL]()
     
     var audioRecorder: AVAudioRecorder?
     var recordingURL: URL!
     var audioPlayer: AVAudioPlayer?
+    var searchQuery: CSSearchQuery?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +31,7 @@ class MemoriesViewController: UICollectionViewController, UINavigationController
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTapped))
         
         recordingURL = getDocumentsDirectory().appendingPathComponent("recording.m4a")
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -74,14 +79,14 @@ class MemoriesViewController: UICollectionViewController, UINavigationController
         if section == 0 {
             return 0
         } else {
-            return memories.count
+            return filteredMemories.count
         }
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Memory", for: indexPath) as! MemoryCell
         
-        let memory = memories[indexPath.row]
+        let memory = filteredMemories [indexPath.row]
         let imageName = thumbnailURL(for: memory).path
         let image = UIImage(contentsOfFile: imageName)
         cell.imageView.image = image
@@ -105,7 +110,7 @@ class MemoriesViewController: UICollectionViewController, UINavigationController
 
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let memory = memories[indexPath.row]
+        let memory = filteredMemories [indexPath.row]
         let fm = FileManager.default
         
         do {
@@ -159,6 +164,8 @@ class MemoriesViewController: UICollectionViewController, UINavigationController
                 // add it our array
                 memories.append(memoryPath)
             }
+            filteredMemories = memories
+            
             // reload our list of memories
             collectionView.reloadSections(IndexSet(integer: 1))
         }
@@ -222,22 +229,6 @@ class MemoriesViewController: UICollectionViewController, UINavigationController
         
     }
     
-    func imageURL(for memory: URL) -> URL {
-        return memory.appendingPathExtension("jpg")
-    }
-    
-    func thumbnailURL(for memory: URL) -> URL {
-        return memory.appendingPathExtension("thumb")
-    }
-    
-    func audioURL(for memory: URL) -> URL {
-        return memory.appendingPathExtension("m4a")
-    }
-    
-    func transcriptionURL(for memory: URL) -> URL {
-        return memory.appendingPathExtension("txt")
-    }
-    
     @objc func addTapped() {
            let vc = UIImagePickerController()
            vc.modalPresentationStyle = .formSheet
@@ -250,7 +241,7 @@ class MemoriesViewController: UICollectionViewController, UINavigationController
             let cell = sender.view as! MemoryCell
             
             if let index = collectionView.indexPath(for: cell){
-                activeMemory = memories[index.row]
+                activeMemory = filteredMemories[index.row]
                 recordMemory()
             }
         } else if sender.state == .ended {
@@ -342,11 +333,52 @@ class MemoriesViewController: UICollectionViewController, UINavigationController
                 // ...and write it to disk at the correct filename for this memory.
                 do {
                     try text.write(to: transcription, atomically: true, encoding: String.Encoding.utf8)
+                   
+                    self.indexMemory(memory: memory, text: text)
                 } catch {
                     print("Failed to save transcription")
                 }
             }
         }
+    }
+    
+    func indexMemory(memory: URL, text: String) {
+        // create a basic attribute set
+        let attibuteSet = CSSearchableItemAttributeSet(itemContentType: kUTTypeText as String)
+        attibuteSet.title = "Happy Days Memory"
+        attibuteSet.contentDescription = text
+        attibuteSet.thumbnailURL = thumbnailURL(for: memory)
+        
+        // wrap it in a searchable item, using the memory's full path as its unique identifer
+        let item = CSSearchableItem(uniqueIdentifier: memory.path, domainIdentifier: "com.iyinraphael", attributeSet: attibuteSet)
+        
+        // make it nevr expire
+        item.expirationDate = Date.distantFuture
+        
+        // ask Spotligh to index the item
+        CSSearchableIndex.default().indexSearchableItems([item]) { error in
+            if let error = error {
+                print("Indexing error: \(error.localizedDescription)")
+            } else {
+                print("Search item successfully indexed: \(text)")
+            }
+        }
+    }
+    
+    func imageURL(for memory: URL) -> URL {
+        return memory.appendingPathExtension("jpg")
+    }
+    
+    func thumbnailURL(for memory: URL) -> URL {
+        return memory.appendingPathExtension("thumb")
+    }
+    
+    func audioURL(for memory: URL) -> URL {
+        return memory.appendingPathExtension("m4a")
+    }
+    
+    func transcriptionURL(for memory: URL) -> URL {
+        return memory.appendingPathExtension("txt")
     }
 }
 
@@ -383,4 +415,42 @@ extension MemoriesViewController: AVAudioRecorderDelegate {
         }
     }
     
+}
+
+extension MemoriesViewController: UISearchBarDelegate {
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filterMemories(text: searchText)
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+    
+    func  filterMemories(text: String) {
+        guard text.count > 0 else { filteredMemories = memories
+        UIView.performWithoutAnimation { collectionView?.reloadSections(IndexSet(integer: 1))
+        }
+        return
+        }
+        var allItems = [CSSearchableItem]()
+        
+        searchQuery?.cancel()
+        let queryString = "contentDescription == \"*\(text)*\"c"
+        searchQuery = CSSearchQuery(queryString: queryString, attributes: nil)
+        searchQuery?.foundItemsHandler = { items in allItems.append(contentsOf: items)
+        }
+        searchQuery?.completionHandler = { error in DispatchQueue.main.async { [unowned self] in
+        self.activateFilter(matches: allItems) }
+        }
+        searchQuery?.start()
+    }
+    
+    func activateFilter(matches: [CSSearchableItem]) {
+        filteredMemories = matches.map { item in
+            return URL(fileURLWithPath: item.uniqueIdentifier)
+        }
+        UIView.performWithoutAnimation { collectionView?.reloadSections(IndexSet(integer: 1))
+        }
+    }
 }
