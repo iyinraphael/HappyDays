@@ -350,13 +350,18 @@ class MemoriesViewController: UICollectionViewController, UINavigationController
         attibuteSet.thumbnailURL = thumbnailURL(for: memory)
         
         // wrap it in a searchable item, using the memory's full path as its unique identifer
-        let item = CSSearchableItem(uniqueIdentifier: memory.path, domainIdentifier: "com.iyinraphael", attributeSet: attibuteSet)
+        let memoryArray = memory.path.split(separator: "/").map{ String($0) }
+        let lastIndex = memoryArray.count - 1
+        let memoryId = memoryArray[lastIndex]
+        
+//        let item = CSSearchableItem(uniqueIdentifier: memory.path, domainIdentifier: "com.iyinraphael", attributeSet: attibuteSet)
+        let item2 = CSSearchableItem(uniqueIdentifier: memoryId, domainIdentifier: "com.iyinraphael", attributeSet: attibuteSet)
         
         // make it nevr expire
-        item.expirationDate = Date.distantFuture
+        item2.expirationDate = Date.distantFuture
         
         // ask Spotligh to index the item
-        CSSearchableIndex.default().indexSearchableItems([item]) { error in
+        CSSearchableIndex.default().indexSearchableItems([item2]) { error in
             if let error = error {
                 print("Indexing error: \(error.localizedDescription)")
             } else {
@@ -448,8 +453,9 @@ extension MemoriesViewController: UISearchBarDelegate {
     
     func activateFilter(matches: [CSSearchableItem]) {
         filteredMemories = matches.map { item in
-            return URL(fileURLWithPath: item.uniqueIdentifier)
+            return getDocumentsDirectory().appendingPathComponent(item.uniqueIdentifier)
         }
+        
         UIView.performWithoutAnimation { collectionView?.reloadSections(IndexSet(integer: 1))
         }
     }
